@@ -1,435 +1,146 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlElement">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <title>Ministry of Hajj and Umrah - Welcome Messages</title>
+  <!-- Keep existing head content -->
   <style>
-    :root {
-      --primary-color: #006c4b;
-      --secondary-color: #e0f7e9;
-      --text-color: #333;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #f8f9fa;
-      color: var(--text-color);
-      min-height: 100vh;
+    /* Add these new styles for language selection */
+    .language-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
-      flex-direction: column;
-      font-family: 'IBM Plex Arabic', Arial, sans-serif;
-    }
-
-    /* Language Switcher */
-    .lang-switcher {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 8px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .lang-switcher:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    [dir="ltr"] .lang-switcher {
-      left: auto;
-      right: 20px;
-    }
-
-    /* Header Styles */
-    header {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/back.jfif');
-      background-size: cover;
-      background-position: center;
-      height: 200px;
-      color: white;
-      position: relative;
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 1.5rem;
-      padding: 1rem;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
     }
 
-    .logo {
-      width: 200px;
-      height: 200px;
-      background: url('images/logo.png') center/contain no-repeat;
+    .language-box {
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
     }
 
-    .header-title {
-      color: #b49164;
-      font-size: 1.8rem;
+    .language-title {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
       font-weight: 700;
     }
 
-    /* Main Content */
-    main {
-      flex: 1;
-      padding: 3rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    h1 {
-      text-align: center;
-      color: var(--primary-color);
-      margin-bottom: 3rem;
-      font-size: 2.5rem;
-      position: relative;
-      padding-bottom: 1.5rem;
-    }
-
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 150px;
-      height: 4px;
-      background: var(--primary-color);
-      border-radius: 3px;
-    }
-
-    /* Cards Section */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    .language-buttons {
+      display: flex;
       gap: 2rem;
-      margin-top: 2rem;
-      padding: 20px;
+      justify-content: center;
     }
 
-    .card {
-      background: linear-gradient(135deg, #f4fff7, #ffffff);
-      padding: 2rem;
-      border-radius: 18px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease-in-out;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid #e0f0e5;
-    }
-
-    .card:hover {
-      transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 12px 28px rgba(0, 108, 75, 0.18);
-    }
-
-    .card p {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-      color: #1f3a2f;
-      font-weight: 500;
-    }
-
-    /* Share Buttons */
-    .share-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-start;
-    }
-
-    .share-btn {
-      background: none;
+    .lang-btn {
+      background: var(--primary-color);
+      color: white;
       border: none;
-      padding: 6px;
-      font-size: 20px;
-      color: #b49164;
-      transition: transform 0.2s ease;
-      text-decoration: none;
-    }
-
-    .share-btn:hover {
-      transform: translateY(-2px);
-      color: #029055;
-    }
-
-    /* Footer Styles */
-    footer {
-      background: #029055;
-      color: white;
-      padding: 3rem 2rem;
-      margin-top: auto;
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 3rem;
-    }
-
-    .footer-section h3 {
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.8rem;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .footer-links a {
-      color: white;
-      text-decoration: none;
+      padding: 1.5rem 3rem;
+      border-radius: 50px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
-      transition: all 0.3s ease;
+      gap: 1rem;
     }
 
-    .footer-links a:hover {
-      color: #b49164;
-      transform: translateX(5px);
+    .lang-btn:hover {
+      background: #004d33;
+      transform: translateY(-3px);
     }
 
-    .copyright {
-      text-align: center;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    .lang-btn i {
+      font-size: 1.5rem;
     }
 
-    /* RTL/LTR Adjustments */
-    [dir="rtl"] .card,
-    [dir="rtl"] .footer-links a {
-      text-align: right;
-    }
-
-    [dir="ltr"] .card,
-    [dir="ltr"] .footer-links a {
-      text-align: left;
-    }
-
-    .english-font {
-      font-family: Arial, sans-serif;
+    /* Add this to hide content until language is selected */
+    body:not(.language-selected) > :not(.language-overlay) {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="lang-switcher" id="langSwitcher">English</div>
-    <div class="header-content">
-      <div class="logo"></div>
-      <h2 class="header-title" data-translate-key="ministry_title">وزارة الحج والعمرة</h2>
-    </div>
-  </header>
-
-  <main>
-    <h1 data-translate-key="page_title">الرسائل الترحيبية</h1>
-    <div class="cards" id="cardContainer"></div>
-  </main>
-
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3 data-translate-key="main_services">الخدمات الرئيسية</h3>
-        <ul class="footer-links">
-          <li><a href="#"><i class="fas fa-mosque"></i><span data-translate-key="hajj_registration">تسجيل الحج</span></a></li>
-          <li><a href="#"><i class="fas fa-passport"></i><span data-translate-key="umrah_visa">تأشيرات العمرة</span></a></li>
-          <li><a href="#"><i class="fas fa-calendar-check"></i><span data-translate-key="hajj_dates">مواعيد الحج</span></a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h3 data-translate-key="contact_us">الاتصال بنا</h3>
-        <ul class="footer-links">
-          <li><a href="tel:920002814"><i class="fas fa-phone"></i>920002814</a></li>
-          <li><a href="mailto:info@haj.gov.sa"><i class="fas fa-envelope"></i>info@haj.gov.sa</a></li>
-          <li><a href="#"><i class="fas fa-map-marker-alt"></i><span data-translate-key="address">مكة المكرمة - المملكة العربية السعودية</span></a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h3 data-translate-key="important_links">مواقع تهمك</h3>
-        <ul class="footer-links">
-          <li><a href="#"><i class="fas fa-globe"></i><span data-translate-key="national_portal">البوابة الوطنية</span></a></li>
-          <li><a href="#"><i class="fas fa-university"></i><span data-translate-key="tourism_ministry">وزارة السياحة</span></a></li>
-          <li><a href="#"><i class="fas fa-plane"></i><span data-translate-key="saudi_airlines">الخطوط السعودية</span></a></li>
-        </ul>
+  <!-- Language Selection Overlay -->
+  <div class="language-overlay" id="languageOverlay">
+    <div class="language-box">
+      <h2 class="language-title">اختر اللغة / Select Language</h2>
+      <div class="language-buttons">
+        <button class="lang-btn" onclick="selectLanguage('ar')">
+          <i class="fas fa-mosque"></i>
+          العربية
+        </button>
+        <button class="lang-btn" onclick="selectLanguage('en')">
+          <i class="fas fa-globe"></i>
+          English
+        </button>
       </div>
     </div>
+  </div>
 
-    <div class="copyright">
-      <p data-translate-key="copyright">جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة</p>
-    </div>
-  </footer>
+  <!-- Keep existing body content -->
 
   <script>
-    const translations = {
-      page_title: {
-        ar: "الرسائل الترحيبية",
-        en: "Welcome Messages"
-      },
-      ministry_title: {
-        ar: "وزارة الحج والعمرة",
-        en: "Ministry of Hajj and Umrah"
-      },
-      main_services: {
-        ar: "الخدمات الرئيسية",
-        en: "Main Services"
-      },
-      hajj_registration: {
-        ar: "تسجيل الحج",
-        en: "Hajj Registration"
-      },
-      umrah_visa: {
-        ar: "تأشيرات العمرة",
-        en: "Umrah Visas"
-      },
-      hajj_dates: {
-        ar: "مواعيد الحج",
-        en: "Hajj Dates"
-      },
-      contact_us: {
-        ar: "الاتصال بنا",
-        en: "Contact Us"
-      },
-      address: {
-        ar: "مكة المكرمة - المملكة العربية السعودية",
-        en: "Makkah - Kingdom of Saudi Arabia"
-      },
-      important_links: {
-        ar: "مواقع تهمك",
-        en: "Important Links"
-      },
-      national_portal: {
-        ar: "البوابة الوطنية",
-        en: "National Portal"
-      },
-      tourism_ministry: {
-        ar: "وزارة السياحة",
-        en: "Tourism Ministry"
-      },
-      saudi_airlines: {
-        ar: "الخطوط السعودية",
-        en: "Saudi Airlines"
-      },
-      copyright: {
-        ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة",
-        en: "All rights reserved © 2024 - Ministry of Hajj and Umrah"
-      }
-    };
-
-    const messages = {
-      ar: [
-        "مرحباً بكم في أرض الحرمين، تقبل الله طاعتكم وأعانكم على أداء المناسك.",
-        "نسأل الله لكم حجاً مبروراً وسعياً مشكوراً وذنباً مغفوراً.",
-        "زادكم الله نوراً وهدى، وأكرمكم بالمغفرة والرضوان في هذه الأيام المباركة.",
-        "نورت مكة بقدومك، جعل الله حجك مبروراً وذنبك مغفوراً وسعيك مشكوراً.",
-        "باسم وزارة الحج والعمرة، نرحب بكم ونتمنى لكم إقامة طيبة وأداءً سهلاً للمناسك.",
-        "أسعد الله أوقاتكم في الديار المقدسة، وتقبل منكم الطاعات والأعمال الصالحة."
-      ],
-      en: [
-        "Welcome to the Land of the Two Holy Mosques. May Allah accept your worship and help you perform the rituals.",
-        "We pray Allah grants you an accepted Hajj, rewarded efforts, and forgiven sins.",
-        "May Allah increase you in light and guidance, and honor you with forgiveness in these blessed days.",
-        "You've illuminated Makkah with your arrival. May Allah make your Hajj accepted and your efforts rewarded.",
-        "On behalf of the Ministry of Hajj and Umrah, we welcome you and wish you a pleasant stay.",
-        "May Allah bless your time in the sacred lands and accept your worship and good deeds."
-      ]
-    };
-
+    // Modified language handling
     let currentLang = 'ar';
 
+    function selectLanguage(lang) {
+      currentLang = lang;
+      const htmlElement = document.getElementById('htmlElement');
+      document.body.classList.add('language-selected');
+      
+      // Hide language overlay
+      document.getElementById('languageOverlay').remove();
+
+      // Set initial direction and lang attribute
+      htmlElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      htmlElement.lang = lang;
+      
+      // Update font family
+      document.body.classList.toggle('english-font', lang === 'en');
+      
+      // Set initial translations
+      document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.dataset.translateKey;
+        element.textContent = translations[key][lang];
+      });
+
+      // Update language switcher text
+      document.getElementById('langSwitcher').textContent = lang === 'ar' ? 'English' : 'العربية';
+      
+      // Render initial cards
+      renderCards();
+    }
+
+    // Modified toggleLanguage function
     function toggleLanguage() {
       currentLang = currentLang === 'ar' ? 'en' : 'ar';
       const htmlElement = document.getElementById('htmlElement');
       
-      // Update direction and language
       htmlElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
       htmlElement.lang = currentLang;
       
-      // Update language switcher text
       document.getElementById('langSwitcher').textContent = currentLang === 'ar' ? 'English' : 'العربية';
-      
-      // Toggle font family
       document.body.classList.toggle('english-font', currentLang === 'en');
       
-      // Update all translatable elements
       document.querySelectorAll('[data-translate-key]').forEach(element => {
         const key = element.dataset.translateKey;
         element.textContent = translations[key][currentLang];
       });
 
-      // Re-render cards
       renderCards();
     }
 
-    function renderCards() {
-      const container = document.getElementById('cardContainer');
-      container.innerHTML = '';
-
-      messages[currentLang].forEach(msg => {
-        const card = document.createElement('div');
-        card.className = 'card';
-
-        const para = document.createElement('p');
-        para.textContent = msg;
-
-        const buttons = document.createElement('div');
-        buttons.className = 'share-buttons';
-
-        const socialPlatforms = [
-          {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
-          {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
-          {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
-          {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
-        ];
-
-        socialPlatforms.forEach(platform => {
-          const link = document.createElement('a');
-          link.className = 'share-btn';
-          link.innerHTML = `<i class="${platform.icon}"></i>`;
-          link.target = '_blank';
-          
-          const shareText = currentLang === 'ar' ? 
-            `${msg} #الحج_والعمرة` : 
-            `${msg} #Hajj_Umrah`;
-            
-          link.href = platform.base + encodeURIComponent(
-            platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
-          );
-
-          buttons.appendChild(link);
-        });
-
-        card.appendChild(para);
-        card.appendChild(buttons);
-        container.appendChild(card);
-      });
-    }
-
-    // Initial render
-    renderCards();
-    document.getElementById('langSwitcher').addEventListener('click', toggleLanguage);
+    // Keep rest of the existing JavaScript
   </script>
 </body>
 </html>
