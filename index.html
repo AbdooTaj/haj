@@ -603,61 +603,60 @@
       container.appendChild(grid);
     }
 
-    function showEmployeeCard(employee) {
-      const container = document.getElementById('cardContainer');
-      container.innerHTML = '';
-      
-      const backButton = document.createElement('button');
-      backButton.className = 'back-button';
-      backButton.textContent = currentLang === 'ar' ? 'العودة إلى القائمة' : 'Back to List';
-      backButton.onclick = showEmployeeGrid;
-      container.appendChild(backButton);
-      
-      const card = document.createElement('div');
-      card.className = 'card';
-      
-      const employeeDiv = document.createElement('div');
-      employeeDiv.className = 'employee-info';
-      employeeDiv.innerHTML = `
-        <i class="fas fa-user-tie"></i>
-        <h3>${employee.name[currentLang]}</h3>
-      `;
+  function showEmployeeCard(employee) {
+  const container = document.getElementById('cardContainer');
+  container.innerHTML = '';
+  
+  const backButton = document.createElement('button');
+  backButton.className = 'back-button';
+  backButton.textContent = currentLang === 'ar' ? 'العودة إلى القائمة' : 'Back to List';
+  backButton.onclick = showEmployeeGrid;
+  container.appendChild(backButton);
+  
+  const card = document.createElement('div');
+  card.className = 'card';
+  
+  const employeeDiv = document.createElement('div');
+  employeeDiv.className = 'employee-info';
+  employeeDiv.innerHTML = `
+    <i class="fas fa-user-tie"></i>
+    <h3>${employee.name[currentLang]}</h3>
+  `;
 
-      const para = document.createElement('p');
-      para.textContent = employee.message[currentLang];
+  const para = document.createElement('p');
+  para.textContent = employee.message[currentLang];
 
-      const buttons = document.createElement('div');
-      buttons.className = 'share-buttons';
+  const buttons = document.createElement('div');
+  buttons.className = 'share-buttons';
 
-      const socialPlatforms = [
-        {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
-        {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
-        {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
-        {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
-      ];
+  const socialPlatforms = [
+    {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
+    {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
+    {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
+    {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
+  ];
 
-      socialPlatforms.forEach(platform => {
-        const link = document.createElement('a');
-        link.className = 'share-btn';
-        link.innerHTML = `<i class="${platform.icon}"></i>`;
-        link.target = '_blank';
-        const shareText = currentLang === 'ar' ? 
-          `${employee.message[ar]} #الحج_والعمرة` : 
-          `${employee.message[en]} #Hajj_Umrah`;
-        link.href = platform.base + encodeURIComponent(
-          platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
-        );
-        buttons.appendChild(link);
-      });
+  socialPlatforms.forEach(platform => {
+    const link = document.createElement('a');
+    link.className = 'share-btn';
+    link.innerHTML = `<i class="${platform.icon}"></i>`;
+    link.target = '_blank';
+    const shareText = currentLang === 'ar' ? 
+      `${employee.message[currentLang]} #الحج_والعمرة` :  // Fixed here
+      `${employee.message[currentLang]} #Hajj_Umrah`;     // And here
+    link.href = platform.base + encodeURIComponent(
+      platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
+    );
+    buttons.appendChild(link);
+  });
 
-      card.appendChild(employeeDiv);
-      card.appendChild(para);
-      card.appendChild(buttons);
-      container.appendChild(card);
-      
-      document.querySelector('h1').textContent = employee.name[currentLang];
-    }
-
+  card.appendChild(employeeDiv);
+  card.appendChild(para);
+  card.appendChild(buttons);
+  container.appendChild(card);
+  
+  document.querySelector('h1').textContent = employee.name[currentLang];
+}
     document.getElementById('langSwitcher').addEventListener('click', toggleLanguage);
   </script>
 </body>
