@@ -301,6 +301,45 @@
     .english-font {
       font-family: Arial, sans-serif;
     }
+
+    .employee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 20px;
+    }
+
+    .employee-card {
+      background: linear-gradient(135deg, #f4fff7, #ffffff);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .employee-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 108, 75, 0.2);
+    }
+
+    .back-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      margin: 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: #004d33;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -421,23 +460,87 @@
       copyright: {
         ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة",
         en: "All rights reserved © 2024 - Ministry of Hajj and Umrah"
+      },
+      select_employee: {
+        ar: "اختر الموظف",
+        en: "Select Employee"
       }
     };
 
-    const messages = {
-      ar: [
-        "شكراً للموظف محمد الجهني على جهوده المتميزة في تسهيل إجراءات الحجاج وتفانيه في العمل ليل نهار.",
-        "نشكر الموظفة أمل القحطاني لتعاونها الاستثنائي مع الفرق الميدانية وتذليلها للعقبات.",
-        "نشكر الموظف عبدالله الراجحي في تحديث الأنظمة الإلكترونية مما ساهم في تحسين الخدمة للمعتمرين.",
-        "نشكر الموظفة نورة السليم على ابتكارها حلولاً إبداعية لتنظيم الحشود أثناء موسم الذروة."
-      ],
-      en: [
-        "Special thanks John Smith for his exceptional efforts in facilitating pilgrims' procedures and round-the-clock dedication.",
-        "our gratitude  Ms. Sarah Johnson for her outstanding cooperation with field teams and resolving challenges efficiently.",
-        "Recognition for Ahmed Ali's efforts in updating electronic systems that significantly improved service quality for visitors.",
-        "Appreciation to  Emily Brown for her innovative solutions in crowd management during peak seasons."
-      ]
-    };
+    const employees = [
+      {
+        id: 1,
+        name: { ar: "أحمد الصبياني", en: "Ahmed Al-Sabiani" },
+        message: {
+          ar: "شكراً للموظف أحمد الصبياني على جهوده المتميزة في تسهيل إجراءات الحجاج وتفانيه في العمل ليل نهار.",
+          en: "Special thanks to Ahmed Al-Sabiani for his exceptional efforts in facilitating pilgrims' procedures and round-the-clock dedication."
+        }
+      },
+      {
+        id: 2,
+        name: { ar: "محمد كفية", en: "Mohammed Kafiya" },
+        message: {
+          ar: "نشكر الموظف محمد كفية لتعاونه الاستثنائي مع الفرق الميدانية وتذليله للعقبات.",
+          en: "Our gratitude to Mohammed Kafiya for his outstanding cooperation with field teams and resolving challenges efficiently."
+        }
+      },
+      {
+        id: 3,
+        name: { ar: "جمال الأحمدي", en: "Jamal Al-Ahmadi" },
+        message: {
+          ar: "تقديراً لجهود جمال الأحمدي في تحسين تجربة الحجاج من خلال حلول تقنية مبتكرة.",
+          en: "Recognition to Jamal Al-Ahmadi for enhancing pilgrims' experience through innovative technical solutions."
+        }
+      },
+      {
+        id: 4,
+        name: { ar: "ناصر الخزاعي", en: "Nasser Al-Khazai" },
+        message: {
+          ar: "نشكر ناصر الخزاعي على إدارته المتميزة لموارد الإسكان خلال موسم الحج.",
+          en: "Thanks to Nasser Al-Khazai for his outstanding management of housing resources during Hajj season."
+        }
+      },
+      {
+        id: 5,
+        name: { ar: "الاء الشريف", en: "Alaa Al-Sharif" },
+        message: {
+          ar: "تقديراً للاء الشريف على خدماتها اللوجستية المتميزة وتنظيمها الفعال.",
+          en: "Appreciation to Alaa Al-Sharif for her excellent logistical services and effective organization."
+        }
+      },
+      {
+        id: 6,
+        name: { ar: "فواز نشار", en: "Fawaz Nashar" },
+        message: {
+          ar: "شكراً لفواز نشار على جهوده في تحسين خدمات النقل للحجاج والمعتمرين.",
+          en: "Special thanks to Fawaz Nashar for his efforts in improving transportation services for pilgrims."
+        }
+      },
+      {
+        id: 7,
+        name: { ar: "عمر المغربي", en: "Omar Al-Maghrabi" },
+        message: {
+          ar: "تقديراً لعمر المغربي على تفانيه في تقديم الدعم الفني على مدار الساعة.",
+          en: "Recognition to Omar Al-Maghrabi for his dedication in providing round-the-clock technical support."
+        }
+      },
+      {
+        id: 8,
+        name: { ar: "أحمد البسامي", en: "Ahmed Al-Bassami" },
+        message: {
+          ar: "شكراً لأحمد البسامي على إدارته الناجحة لفرق الاستقبال في المطارات.",
+          en: "Thanks to Ahmed Al-Bassami for his successful management of airport reception teams."
+        }
+      },
+      {
+        id: 9,
+        name: { ar: "يسار الجدعاني", en: "Yassar Al-Jedaani" },
+        message: {
+          ar: "نشكر يسار الجدعاني على جهوده في تطوير أنظمة التسجيل الإلكترونية.",
+          en: "Our gratitude to Yassar Al-Jedaani for his efforts in developing electronic registration systems."
+        }
+      }
+    ];
 
     let currentLang = 'ar';
 
@@ -454,7 +557,7 @@
         element.textContent = translations[key][lang];
       });
       document.getElementById('langSwitcher').textContent = lang === 'ar' ? 'English' : 'العربية';
-      renderCards();
+      showEmployeeGrid();
     }
 
     function toggleLanguage() {
@@ -468,56 +571,91 @@
         const key = element.dataset.translateKey;
         element.textContent = translations[key][currentLang];
       });
-      renderCards();
+      if (document.querySelector('.employee-grid')) {
+        showEmployeeGrid();
+      } else {
+        renderCards();
+      }
     }
 
-    function renderCards() {
+    function showEmployeeGrid() {
       const container = document.getElementById('cardContainer');
       container.innerHTML = '';
-
-      messages[currentLang].forEach(msg => {
+      
+      document.querySelector('h1').textContent = translations.select_employee[currentLang];
+      
+      const grid = document.createElement('div');
+      grid.className = 'employee-grid';
+      
+      employees.forEach(employee => {
         const card = document.createElement('div');
-        card.className = 'card';
-
-        const employeeDiv = document.createElement('div');
-        employeeDiv.className = 'employee-info';
-        employeeDiv.innerHTML = `
-          <i class="fas fa-user-tie"></i>
-          <h3>${msg.split(' ')[2]}</h3>
+        card.className = 'employee-card';
+        card.innerHTML = `
+          <div class="employee-info">
+            <i class="fas fa-user-tie"></i>
+            <h3>${employee.name[currentLang]}</h3>
+          </div>
         `;
-
-        const para = document.createElement('p');
-        para.textContent = msg;
-
-        const buttons = document.createElement('div');
-        buttons.className = 'share-buttons';
-
-        const socialPlatforms = [
-          {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
-          {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
-          {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
-          {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
-        ];
-
-        socialPlatforms.forEach(platform => {
-          const link = document.createElement('a');
-          link.className = 'share-btn';
-          link.innerHTML = `<i class="${platform.icon}"></i>`;
-          link.target = '_blank';
-          const shareText = currentLang === 'ar' ? 
-            `${msg} #الحج_والعمرة` : 
-            `${msg} #Hajj_Umrah`;
-          link.href = platform.base + encodeURIComponent(
-            platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
-          );
-          buttons.appendChild(link);
-        });
-
-        card.appendChild(employeeDiv);
-        card.appendChild(para);
-        card.appendChild(buttons);
-        container.appendChild(card);
+        card.addEventListener('click', () => showEmployeeCard(employee));
+        grid.appendChild(card);
       });
+      
+      container.appendChild(grid);
+    }
+
+    function showEmployeeCard(employee) {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      const backButton = document.createElement('button');
+      backButton.className = 'back-button';
+      backButton.textContent = currentLang === 'ar' ? 'العودة إلى القائمة' : 'Back to List';
+      backButton.onclick = showEmployeeGrid;
+      container.appendChild(backButton);
+      
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      const employeeDiv = document.createElement('div');
+      employeeDiv.className = 'employee-info';
+      employeeDiv.innerHTML = `
+        <i class="fas fa-user-tie"></i>
+        <h3>${employee.name[currentLang]}</h3>
+      `;
+
+      const para = document.createElement('p');
+      para.textContent = employee.message[currentLang];
+
+      const buttons = document.createElement('div');
+      buttons.className = 'share-buttons';
+
+      const socialPlatforms = [
+        {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
+        {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
+        {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
+        {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
+      ];
+
+      socialPlatforms.forEach(platform => {
+        const link = document.createElement('a');
+        link.className = 'share-btn';
+        link.innerHTML = `<i class="${platform.icon}"></i>`;
+        link.target = '_blank';
+        const shareText = currentLang === 'ar' ? 
+          `${employee.message[ar]} #الحج_والعمرة` : 
+          `${employee.message[en]} #Hajj_Umrah`;
+        link.href = platform.base + encodeURIComponent(
+          platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
+        );
+        buttons.appendChild(link);
+      });
+
+      card.appendChild(employeeDiv);
+      card.appendChild(para);
+      card.appendChild(buttons);
+      container.appendChild(card);
+      
+      document.querySelector('h1').textContent = employee.name[currentLang];
     }
 
     document.getElementById('langSwitcher').addEventListener('click', toggleLanguage);
