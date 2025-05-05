@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="htmlElement">
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <title>وزارة الحج والعمرة - رسائل الشكر</title>
   <style>
-  :root {
+    :root {
       --primary-color: #006c4b;
       --secondary-color: #e0f7e9;
       --text-color: #333;
@@ -317,11 +317,53 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-align: center;
+      position: relative;
     }
 
-    .employee-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 108, 75, 0.2);
+    .selected-employee {
+      border: 3px solid #006c4b !important;
+      background: #e0f7e9 !important;
+    }
+
+    .selection-check {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #006c4b;
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    [dir="rtl"] .selection-check {
+      left: auto;
+      right: 10px;
+    }
+
+    .selected-employee .selection-check {
+      opacity: 1;
+    }
+
+    .generate-button {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 100;
+      border: none;
+      font-size: 1.1rem;
+    }
+
+    .generate-button:hover {
+      background: #004d33;
+      transform: translateX(-50%) translateY(-2px);
     }
 
     .back-button {
@@ -419,6 +461,11 @@
         margin: 0.5rem;
         padding: 0.6rem 1rem;
       }
+
+      .generate-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -461,57 +508,10 @@
         margin-bottom: 1.5rem;
       }
     }
-    
-    /* Add new multi-select styles */
-    .selected-employee {
-      border: 3px solid #006c4b !important;
-      background: #e0f7e9 !important;
-    }
-
-    .selection-check {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      color: #006c4b;
-      font-size: 1.5rem;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    [dir="rtl"] .selection-check {
-      left: auto;
-      right: 10px;
-    }
-
-    .selected-employee .selection-check {
-      opacity: 1;
-    }
-
-    .generate-button {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--primary-color);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      display: none;
-      z-index: 100;
-      border: none;
-      font-size: 1.1rem;
-    }
-
-    .generate-button:hover {
-      background: #004d33;
-      transform: translateX(-50%) translateY(-2px);
-    }
   </style>
 </head>
 <body>
- <div class="language-overlay" id="languageOverlay">
+  <div class="language-overlay" id="languageOverlay">
     <div class="language-box">
       <h2 class="language-title">اختر اللغة / Select Language</h2>
       <div class="language-buttons">
@@ -541,8 +541,7 @@
   </main>
 
   <footer>
-  
-
+    <div class="footer-content">
       <div class="footer-section">
         <h3 data-translate-key="contact_us">الاتصال بنا</h3>
         <ul class="footer-links">
@@ -557,21 +556,41 @@
       <p data-translate-key="copyright">جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة</p>
     </div>
   </footer>
+
   <button class="generate-button" id="generateButton" data-translate-key="generate_message">إنشاء رسالة شكر جماعية</button>
 
   <script>
-    // Complete translations
     const translations = {
-      page_title: { ar: "رسائل الشكر للموظفين", en: "Employee Appreciation Messages" },
-      ministry_title: { ar: "وزارة الحج والعمرة", en: "Ministry of Hajj and Umrah" },
-      contact_us: { ar: "الاتصال بنا", en: "Contact Us" },
-      address: { ar: "مكة المكرمة - المملكة العربية السعودية", en: "Makkah - Kingdom of Saudi Arabia" },
-      copyright: { ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة", en: "All rights reserved © 2024 - Ministry of Hajj and Umrah" },
-      select_employee: { ar: "اختر الموظف", en: "Select Employee" },
-      generate_message: { ar: "إنشاء رسالة شكر جماعية", en: "Generate Combined Message" }
+      page_title: {
+        ar: "رسائل الشكر للموظفين",
+        en: "Employee Appreciation Messages"
+      },
+      ministry_title: {
+        ar: "وزارة الحج والعمرة",
+        en: "Ministry of Hajj and Umrah"
+      },
+      contact_us: {
+        ar: "الاتصال بنا",
+        en: "Contact Us"
+      },
+      address: {
+        ar: "مكة المكرمة - المملكة العربية السعودية",
+        en: "Makkah - Kingdom of Saudi Arabia"
+      },
+      copyright: {
+        ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة",
+        en: "All rights reserved © 2024 - Ministry of Hajj and Umrah"
+      },
+      select_employee: {
+        ar: "اختر الموظف",
+        en: "Select Employee"
+      },
+      generate_message: {
+        ar: "إنشاء رسالة شكر جماعية",
+        en: "Generate Combined Message"
+      }
     };
 
-    // Complete employees list
     const employees = [
       {
         id: 1,
@@ -581,10 +600,9 @@
           en: "Special thanks to Ahmed Al-Sabiani for his exceptional efforts in facilitating pilgrims' procedures and round-the-clock dedication."
         }
       },
-      // Add other 8 employees here with same structure...
+      // Add other employees here...
     ];
 
-    // Complete JavaScript functions
     let currentLang = 'ar';
     let selectedEmployees = [];
 
@@ -601,17 +619,108 @@
         element.textContent = translations[key][lang];
       });
       document.getElementById('langSwitcher').textContent = lang === 'ar' ? 'English' : 'العربية';
-      document.getElementById('generateButton').textContent = translations.generate_message[lang];
       showEmployeeGrid();
     }
 
-    // Add remaining JavaScript functions from previous answer
-    // (toggleLanguage, showEmployeeGrid, toggleEmployeeSelection,
-    // generateCombinedMessage, createShareButtons)
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      const htmlElement = document.getElementById('htmlElement');
+      htmlElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      htmlElement.lang = currentLang;
+      document.getElementById('langSwitcher').textContent = currentLang === 'ar' ? 'English' : 'العربية';
+      document.body.classList.toggle('english-font', currentLang === 'en');
+      document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.dataset.translateKey;
+        element.textContent = translations[key][currentLang];
+      });
+      if (document.querySelector('.employee-grid')) {
+        showEmployeeGrid();
+      } else {
+        renderCards();
+      }
+    }
 
-    // Initialize event listeners
+    function showEmployeeGrid() {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      document.querySelector('h1').textContent = translations.select_employee[currentLang];
+      
+      const grid = document.createElement('div');
+      grid.className = 'employee-grid';
+      
+      employees.forEach(employee => {
+        const card = document.createElement('div');
+        card.className = 'employee-card';
+        card.innerHTML = `
+          <div class="employee-info">
+            <i class="fas fa-user-tie"></i>
+            <h3>${employee.name[currentLang]}</h3>
+          </div>
+        `;
+        card.addEventListener('click', () => showEmployeeCard(employee));
+        grid.appendChild(card);
+      });
+      
+      container.appendChild(grid);
+    }
+
+    function showEmployeeCard(employee) {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      const backButton = document.createElement('button');
+      backButton.className = 'back-button';
+      backButton.textContent = currentLang === 'ar' ? 'العودة إلى القائمة' : 'Back to List';
+      backButton.onclick = showEmployeeGrid;
+      container.appendChild(backButton);
+      
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      const employeeDiv = document.createElement('div');
+      employeeDiv.className = 'employee-info';
+      employeeDiv.innerHTML = `
+        <i class="fas fa-user-tie"></i>
+        <h3>${employee.name[currentLang]}</h3>
+      `;
+
+      const para = document.createElement('p');
+      para.textContent = employee.message[currentLang];
+
+      const buttons = document.createElement('div');
+      buttons.className = 'share-buttons';
+
+      const socialPlatforms = [
+        {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
+        {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
+        {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
+        {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
+      ];
+
+      socialPlatforms.forEach(platform => {
+        const link = document.createElement('a');
+        link.className = 'share-btn';
+        link.innerHTML = `<i class="${platform.icon}"></i>`;
+        link.target = '_blank';
+        const shareText = currentLang === 'ar' ? 
+          `${employee.message[currentLang]} #الحج_والعمرة` : 
+          `${employee.message[currentLang]} #Hajj_Umrah`;
+        link.href = platform.base + encodeURIComponent(
+          platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
+        );
+        buttons.appendChild(link);
+      });
+
+      card.appendChild(employeeDiv);
+      card.appendChild(para);
+      card.appendChild(buttons);
+      container.appendChild(card);
+      
+      document.querySelector('h1').textContent = employee.name[currentLang];
+    }
+
     document.getElementById('langSwitcher').addEventListener('click', toggleLanguage);
-    document.getElementById('generateButton').addEventListener('click', generateCombinedMessage);
   </script>
 </body>
 </html>
