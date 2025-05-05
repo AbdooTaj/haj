@@ -1,33 +1,988 @@
- function selectLanguage(lang) {
-      currentLang = lang;
-      const htmlElement = document.getElementById('htmlElement');
-      document.body.classList.add('language-selected');
-      document.getElementById('languageOverlay').remove();
-      htmlElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      htmlElement.lang = lang;
-      document.body.classList.toggle('english-font', lang === 'en');
-      document.querySelectorAll('[data-translate-key]').forEach(element => {
-        const key = element.dataset.translateKey;
-        element.textContent = translations[key][lang];
-      });
-      document.getElementById('langSwitcher').textContent = lang === 'ar' ? 'English' : 'العربية';
-      showEmployeeGrid();
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlElement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <title>وزارة الحج والعمرة - رسائل الشكر</title>
+  <style>
+
+.selected-employee {
+  border: 3px solid #006c4b !important;
+  background: #e0f7e9 !important;
+}
+
+.selection-check {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #006c4b;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[dir="rtl"] .selection-check {
+  left: auto;
+  right: 10px;
+}
+
+.selected-employee .selection-check {
+  opacity: 1;
+}
+
+.generate-button {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 100;
+  border: none;
+  font-size: 1.1rem;
+}
+    :root {
+      --primary-color: #006c4b;
+      --secondary-color: #e0f7e9;
+      --text-color: #333;
     }
 
-    function toggleLanguage() {
-      currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      const htmlElement = document.getElementById('htmlElement');
-      htmlElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-      htmlElement.lang = currentLang;
-      document.getElementById('langSwitcher').textContent = currentLang === 'ar' ? 'English' : 'العربية';
-      document.body.classList.toggle('english-font', currentLang === 'en');
-      document.querySelectorAll('[data-translate-key]').forEach(element => {
-        const key = element.dataset.translateKey;
-        element.textContent = translations[key][currentLang];
-      });
-      if (document.querySelector('.employee-grid')) {
-        showEmployeeGrid();
-      } else {
-        renderCards();
+    .language-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .language-box {
+      background: white;
+      padding: 3rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+
+    .language-title {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      font-weight: 700;
+    }
+
+    .language-buttons {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .lang-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 1.5rem 3rem;
+      border-radius: 50px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lang-btn:hover {
+      background: #004d33;
+      transform: translateY(-3px);
+    }
+
+    .lang-btn i {
+      font-size: 1.5rem;
+    }
+
+    body:not(.language-selected) > :not(.language-overlay) {
+      display: none;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f8f9fa;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'IBM Plex Arabic', Arial, sans-serif;
+    }
+
+    .lang-switcher {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .lang-switcher:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    [dir="ltr"] .lang-switcher {
+      left: auto;
+      right: 20px;
+    }
+
+    header {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/back.jfif');
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      color: white;
+      position: relative;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+
+    .logo {
+      width: 200px;
+      height: 200px;
+      background: url('images/logo.png') center/contain no-repeat;
+    }
+
+    .header-title {
+      color: #b49164;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    main {
+      flex: 1;
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 3rem;
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 4px;
+      background: var(--primary-color);
+      border-radius: 3px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 20px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #f4fff7, #ffffff);
+      padding: 2rem;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease-in-out;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #e0f0e5;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 12px 28px rgba(0, 108, 75, 0.18);
+    }
+
+    .card p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      color: #1f3a2f;
+      font-weight: 500;
+    }
+
+    .employee-info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .employee-info i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+    }
+
+    .employee-info h3 {
+      margin: 10px 0 5px;
+    }
+
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .share-btn {
+      background: none;
+      border: none;
+      padding: 6px;
+      font-size: 20px;
+      color: #b49164;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      color: #029055;
+    }
+
+    footer {
+      background: #029055;
+      color: white;
+      padding: 3rem 2rem;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+    }
+
+    .footer-section h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #b49164;
+      transform: translateX(5px);
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    [dir="rtl"] .card,
+    [dir="rtl"] .footer-links a {
+      text-align: right;
+    }
+
+    [dir="ltr"] .card,
+    [dir="ltr"] .footer-links a {
+      text-align: left;
+    }
+
+    .english-font {
+      font-family: Arial, sans-serif;
+    }
+
+    .employee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 20px;
+    }
+
+    .employee-card {
+      background: linear-gradient(135deg, #f4fff7, #ffffff);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .employee-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 108, 75, 0.2);
+    }
+
+    .back-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      margin: 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: #004d33;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 2rem;
+      }
+
+      .logo {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+      }
+
+      .header-title {
+        font-size: 1.4rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        padding-bottom: 1rem;
+      }
+
+      h1::after {
+        width: 100px;
+      }
+
+      .language-box {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .language-title {
+        font-size: 1.8rem;
+      }
+
+      .lang-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+      }
+
+      .employee-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .lang-switcher {
+        top: 10px;
+        left: 10px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+
+      .employee-card {
+        padding: 1rem;
+      }
+
+      .card p {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .share-buttons {
+        justify-content: center;
+      }
+
+      .back-button {
+        margin: 0.5rem;
+        padding: 0.6rem 1rem;
       }
     }
+
+    @media (max-width: 480px) {
+      header {
+        height: 160px;
+      }
+
+      .language-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .header-title {
+        font-size: 1.2rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .employee-info i {
+        font-size: 2rem;
+      }
+
+      .footer-links a {
+        font-size: 0.9rem;
+      }
+
+      .copyright p {
+        font-size: 0.9rem;
+      }
+
+      .language-box {
+        padding: 1rem;
+      }
+
+      .language-title {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="language-overlay" id="languageOverlay">
+    <div class="language-box">
+      <h2 class="language-title">اختر اللغة / Select Language</h2>
+      <div class="language-buttons">
+        <button class="lang-btn" onclick="selectLanguage('ar')">
+          <i class="fas fa-mosque"></i>
+          العربية
+        </button>
+        <button class="lang-btn" onclick="selectLanguage('en')">
+          <i class="fas fa-globe"></i>
+          English
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="lang-switcher" id="langSwitcher">English</div>
+    <div class="header-content">
+      <div class="logo"></div>
+      <h2 class="header-title" data-translate-key="ministry_title">وزارة الحج والعمرة</h2>
+    </div>
+  </header>
+
+  <main>
+    <h1 data-translate-key="page_title">رسائل الشكر للموظفين</h1>
+    <button class="generate-button" id="generateButton">إنشاء رسالة شكر</button>
+    <div class="cards" id="cardContainer"></div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 data-translate-key="main_services">الخدمات الرئيسية</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-mosque"></i><span data-translate-key="hajj_registration">تسجيل الحج</span></a></li>
+          <li><a href="#"><i class="fas fa-passport"></i><span data-translate-key="umrah_visa">تأشيرات العمرة</span></a></li>
+          <li><a href="#"><i class="fas fa-calendar-check"></i><span data-translate-key="hajj_dates">مواعيد الحج</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3 data-translate-key="contact_us">الاتصال بنا</h3>
+        <ul class="footer-links">
+          <li><a href="tel:920002814"><i class="fas fa-phone"></i>920002814</a></li>
+          <li><a href="mailto:info@haj.gov.sa"><i class="fas fa-envelope"></i>info@haj.gov.sa</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i><span data-translate-key="address">مكة المكرمة - المملكة العربية السعودية</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3 data-translate-key="important_links">مواقع تهمك</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-globe"></i><span data-translate-key="national_portal">البوابة الوطنية</span></a></li>
+          <li><a href="#"><i class="fas fa-university"></i><span data-translate-key="tourism_ministry">وزارة السياحة</span></a></li>
+          <li><a href="#"><i class="fas fa-plane"></i><span data-translate-key="saudi_airlines">الخطوط السعودية</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p data-translate-key="copyright">جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة</p>
+    </div>
+  </footer>
+
+  <script>
+const translations = {
+  page_title: {
+    ar: "رسائل الشكر للموظفين",
+    en: "Employee Appreciation Messages"
+  },
+  ministry_title: {
+    ar: "وزارة الحج والعمرة",
+    en: "Ministry of Hajj and Umrah"
+  },
+  main_services: {
+    ar: "الخدمات الرئيسية",
+    en: "Main Services"
+  },
+  hajj_registration: {
+    ar: "تسجيل الحج",
+    en: "Hajj Registration"
+  },
+  umrah_visa: {
+    ar: "تأشيرات العمرة",
+    en: "Umrah Visas"
+  },
+  hajj_dates: {
+    ar: "مواعيد الحج",
+    en: "Hajj Dates"
+  },
+  contact_us: {
+    ar: "الاتصال بنا",
+    en: "Contact Us"
+  },
+  address: {
+    ar: "مكة المكرمة - المملكة العربية السعودية",
+    en: "Makkah - Kingdom of Saudi Arabia"
+  },
+  important_links: {
+    ar: "مواقع تهمك",
+    en: "Important Links"
+  },
+  national_portal: {
+    ar: "البوابة الوطنية",
+    en: "National Portal"
+  },
+  tourism_ministry: {
+    ar: "وزارة السياحة",
+    en: "Tourism Ministry"
+  },
+  saudi_airlines: {
+    ar: "الخطوط السعودية",
+    en: "Saudi Airlines"
+  },
+  copyright: {
+    ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة",
+    en: "All rights reserved © 2024 - Ministry of Hajj and Umrah"
+  },
+  select_employee: {
+    ar: "اختر الموظف",
+    en: "Select Employee"
+  },
+  generate_message: { // أضف هذا المفتاح
+    ar: "إنشاء رسالة شكر جماعية",
+    en: "Generate Combined Message"
+  },
+
+      page_title: {
+        ar: "رسائل الشكر للموظفين",
+        en: "Employee Appreciation Messages"
+      },
+      ministry_title: {
+        ar: "وزارة الحج والعمرة",
+        en: "Ministry of Hajj and Umrah"
+      },
+      hajj_registration: {
+        ar: "تسجيل الحج",
+        en: "Hajj Registration"
+      },
+  
+      contact_us: {
+        ar: "الاتصال بنا",
+        en: "Contact Us"
+      },
+      address: {
+        ar: "مكة المكرمة - المملكة العربية السعودية",
+        en: "Makkah - Kingdom of Saudi Arabia"
+      },
+     
+      copyright: {
+        ar: "جميع الحقوق محفوظة © 1445 هـ - وزارة الحج والعمرة",
+        en: "All rights reserved © 2024 - Ministry of Hajj and Umrah"
+      },
+      select_employee: {
+        ar: "اختر الموظف",
+        en: "Select Employee"
+      }
+    };
+
+    const employees = [
+      {
+        id: 1,
+        name: { ar: "أحمد الصبياني", en: "Ahmed Al-Sabiani" },
+        message: {
+          ar: "شكراً للموظف أحمد الصبياني على جهوده المتميزة في تسهيل إجراءات الحجاج وتفانيه في العمل ليل نهار.",
+          en: "Special thanks to Ahmed Al-Sabiani for his exceptional efforts in facilitating pilgrims' procedures and round-the-clock dedication."
+        }
+      },
+      {
+        id: 2,
+        name: { ar: "محمد كفية", en: "Mohammed Kafiya" },
+        message: {
+          ar: "نشكر الموظف محمد كفية لتعاونه الاستثنائي مع الفرق الميدانية وتذليله للعقبات.",
+          en: "Our gratitude to Mohammed Kafiya for his outstanding cooperation with field teams and resolving challenges efficiently."
+        }
+      },
+      {
+        id: 3,
+        name: { ar: "جمال الأحمدي", en: "Jamal Al-Ahmadi" },
+        message: {
+          ar: "تقديراً لجهود جمال الأحمدي في تحسين تجربة الحجاج من خلال حلول تقنية مبتكرة.",
+          en: "Recognition to Jamal Al-Ahmadi for enhancing pilgrims' experience through innovative technical solutions."
+        }
+      },
+      {
+        id: 4,
+        name: { ar: "ناصر الخزاعي", en: "Nasser Al-Khazai" },
+        message: {
+          ar: "نشكر ناصر الخزاعي على إدارته المتميزة لموارد الإسكان خلال موسم الحج.",
+          en: "Thanks to Nasser Al-Khazai for his outstanding management of housing resources during Hajj season."
+        }
+      },
+      {
+        id: 5,
+        name: { ar: "الاء الشريف", en: "Alaa Al-Sharif" },
+        message: {
+          ar: "تقديراً للاء الشريف على خدماتها اللوجستية المتميزة وتنظيمها الفعال.",
+          en: "Appreciation to Alaa Al-Sharif for her excellent logistical services and effective organization."
+        }
+      },
+      {
+        id: 6,
+        name: { ar: "فواز نشار", en: "Fawaz Nashar" },
+        message: {
+          ar: "شكراً لفواز نشار على جهوده في تحسين خدمات النقل للحجاج والمعتمرين.",
+          en: "Special thanks to Fawaz Nashar for his efforts in improving transportation services for pilgrims."
+        }
+      },
+      {
+        id: 7,
+        name: { ar: "عمر المغربي", en: "Omar Al-Maghrabi" },
+        message: {
+          ar: "تقديراً لعمر المغربي على تفانيه في تقديم الدعم الفني على مدار الساعة.",
+          en: "Recognition to Omar Al-Maghrabi for his dedication in providing round-the-clock technical support."
+        }
+      },
+      {
+        id: 8,
+        name: { ar: "أحمد البسامي", en: "Ahmed Al-Bassami" },
+        message: {
+          ar: "شكراً لأحمد البسامي على إدارته الناجحة لفرق الاستقبال في المطارات.",
+          en: "Thanks to Ahmed Al-Bassami for his successful management of airport reception teams."
+        }
+      },
+      {
+        id: 9,
+        name: { ar: "يسار الجدعاني", en: "Yassar Al-Jedaani" },
+        message: {
+          ar: "نشكر يسار الجدعاني على جهوده في تطوير أنظمة التسجيل الإلكترونية.",
+          en: "Our gratitude to Yassar Al-Jedaani for his efforts in developing electronic registration systems."
+        },
+        generate_message: {
+    ar: "إنشاء رسالة شكر",
+    en: "Create Thank You Message"
+  },
+  custom_message_placeholder: {
+    ar: "اكتب رسالة الشكر هنا...",
+    en: "Write your thank you message here..."
+  },
+  share_feedback: {
+    ar: "شاركنا تقييمك",
+    en: "Share Your Feedback"
+  } 
+      }
+    ];
+
+    let currentLang = 'ar';
+  
+
+
+function selectLanguage(lang) {
+  currentLang = lang;
+  const htmlElement = document.getElementById('htmlElement');
+  if (htmlElement) {
+    document.body.classList.add('language-selected');
+    htmlElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    htmlElement.lang = lang;
+  }
+  
+  const overlay = document.getElementById('languageOverlay');
+  if (overlay) overlay.remove();
+
+  document.body.classList.toggle('english-font', lang === 'en');
+  
+  document.querySelectorAll('[data-translate-key]').forEach(element => {
+    const key = element.dataset.translateKey;
+    if (translations[key] && translations[key][lang]) {
+      element.textContent = translations[key][lang];
+    }
+  });
+  
+  const langSwitcher = document.getElementById('langSwitcher');
+  if (langSwitcher) {
+    langSwitcher.textContent = lang === 'ar' ? 'English' : 'العربية';
+  }
+  
+  showEmployeeGrid();
+}
+
+// تصحيح الدالة toggleLanguage
+function toggleLanguage() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  const htmlElement = document.getElementById('htmlElement');
+  if (htmlElement) {
+    htmlElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    htmlElement.lang = currentLang;
+  }
+  
+  document.body.classList.toggle('english-font', currentLang === 'en');
+  
+  document.querySelectorAll('[data-translate-key]').forEach(element => {
+    const key = element.dataset.translateKey;
+    if (translations[key] && translations[key][currentLang]) {
+      element.textContent = translations[key][currentLang];
+    }
+  });
+  
+  const langSwitcher = document.getElementById('langSwitcher');
+  if (langSwitcher) {
+    langSwitcher.textContent = currentLang === 'ar' ? 'English' : 'العربية';
+  }
+  
+  if (document.querySelector('.employee-grid')) {
+    showEmployeeGrid();
+  } else {
+    renderCards();
+  }
+}
+
+    function showEmployeeGrid() {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      document.querySelector('h1').textContent = translations.select_employee[currentLang];
+      
+      const grid = document.createElement('div');
+      grid.className = 'employee-grid';
+      
+    employees.forEach(employee => {
+    const card = document.createElement('div');
+    card.className = 'employee-card';
+    card.innerHTML = `
+      <div class="employee-info">
+        <i class="fas fa-user-tie"></i>
+        <h3>${employee.name[currentLang]}</h3>
+        <i class="fas fa-check-circle selection-check"></i>
+      </div>
+    `;
+    
+    card.addEventListener('click', () => toggleEmployeeSelection(employee, card));
+    grid.appendChild(card);
+  });
+      container.appendChild(grid);
+    }
+
+    function showEmployeeCard(employee) {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      
+      const backButton = document.createElement('button');
+      backButton.className = 'back-button';
+      backButton.textContent = currentLang === 'ar' ? 'العودة إلى القائمة' : 'Back to List';
+      backButton.onclick = showEmployeeGrid;
+      container.appendChild(backButton);
+      
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      const employeeDiv = document.createElement('div');
+      employeeDiv.className = 'employee-info';
+      employeeDiv.innerHTML = `
+        <i class="fas fa-user-tie"></i>
+        <h3>${employee.name[currentLang]}</h3>
+      `;
+
+      const para = document.createElement('p');
+      para.textContent = employee.message[currentLang];
+
+      const buttons = document.createElement('div');
+      buttons.className = 'share-buttons';
+
+      const socialPlatforms = [
+        {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
+        {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
+        {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
+        {icon: 'fab fa-instagram', base: 'https://www.instagram.com/'}
+      ];
+
+      socialPlatforms.forEach(platform => {
+        const link = document.createElement('a');
+        link.className = 'share-btn';
+        link.innerHTML = `<i class="${platform.icon}"></i>`;
+        link.target = '_blank';
+        const shareText = currentLang === 'ar' ? 
+          `${employee.message[currentLang]} #الحج_والعمرة` : 
+          `${employee.message[currentLang]} #Hajj_Umrah`;
+        link.href = platform.base + encodeURIComponent(
+          platform.icon.includes('facebook') ? `${shareText} ${window.location.href}` : shareText
+        );
+        buttons.appendChild(link);
+      });
+
+      card.appendChild(employeeDiv);
+      card.appendChild(para);
+      card.appendChild(buttons);
+      container.appendChild(card);
+      
+      document.querySelector('h1').textContent = employee.name[currentLang];
+    }
+
+    document.getElementById('langSwitcher').addEventListener('click', toggleLanguage);
+
+    let selectedEmployees = [];
+
+function toggleEmployeeSelection(employee, card) {
+  const index = selectedEmployees.findIndex(e => e.id === employee.id);
+  if (index === -1) {
+    selectedEmployees.push(employee);
+    card.classList.add('selected-employee');
+  } else {
+    selectedEmployees.splice(index, 1);
+    card.classList.remove('selected-employee');
+  }
+  
+  document.getElementById('generateButton').style.display = 
+    selectedEmployees.length > 0 ? 'block' : 'none';
+}
+
+function showMessageForm() {
+  const container = document.getElementById('cardContainer');
+  container.innerHTML = '';
+  
+  const backButton = document.createElement('button');
+  backButton.className = 'back-button';
+  backButton.textContent = currentLang === 'ar' ? 'العودة' : 'Back';
+  backButton.onclick = showEmployeeGrid;
+  container.appendChild(backButton);
+
+  const formCard = document.createElement('div');
+  formCard.className = 'card';
+  
+  const names = selectedEmployees.map(e => e.name[currentLang]).join('، ');
+  
+  formCard.innerHTML = `
+    <div class="employee-info">
+      <i class="fas fa-users"></i>
+      <h3>${currentLang === 'ar' ? 'الموظفون المختارون:' : 'Selected Employees:'}</h3>
+      <p>${names}</p>
+    </div>
+    
+    <div class="message-form">
+      <h4>${currentLang === 'ar' ? 'شاركنا تقييمك' : 'Share Your Feedback'}</h4>
+      <textarea id="customMessage" placeholder="${currentLang === 'ar' ? 'اكتب رسالة الشكر هنا...' : 'Write your thank you message here...'}" rows="6"></textarea>
+      
+      <div class="suggestions">
+        <p>${currentLang === 'ar' ? 'عبارات مقترحة:' : 'Suggested phrases:'}</p>
+        <p>"${currentLang === 'ar' ? 'كل الشكر والتقدير لك، ساعدتني بكل رحابة صدر' : 'Many thanks for your generous assistance'}"</p>
+        <p>"${currentLang === 'ar' ? 'تعاملك الراقي يدل على أصلك الطيب' : 'Your gracious manner reflects your good nature'}"</p>
+      </div>
+    </div>
+  `;
+
+  const shareButtons = createShareButtons();
+  formCard.appendChild(shareButtons);
+  container.appendChild(formCard);
+}
+
+function createShareButtons() {
+  const buttons = document.createElement('div');
+  buttons.className = 'share-buttons';
+
+  const socialPlatforms = [
+    {icon: 'fab fa-x-twitter', base: 'https://twitter.com/intent/tweet?text='},
+    {icon: 'fab fa-whatsapp', base: 'https://wa.me/?text='},
+    {icon: 'fab fa-facebook-f', base: 'https://www.facebook.com/sharer/sharer.php?u='},
+  ];
+
+  socialPlatforms.forEach(platform => {
+    const link = document.createElement('a');
+    link.className = 'share-btn';
+    link.innerHTML = `<i class="${platform.icon}"></i>`;
+    link.target = '_blank';
+    
+    const customMessage = document.getElementById('customMessage')?.value || '';
+    const names = selectedEmployees.map(e => e.name[currentLang]).join('، ');
+    const hashtags = currentLang === 'ar' ? '#وزارة_الحج #المسارات_الإلكترونية' : '#HajjMinistry #E_Services';
+    
+    const fullText = `${customMessage}\n\n${names}\n${hashtags}`;
+    
+    link.href = platform.base + encodeURIComponent(fullText);
+    buttons.appendChild(link);
+  });
+
+  return buttons;
+}
+
+document.getElementById('generateButton').addEventListener('click', showMessageForm);
+  </script>
+</body>
+</html>
