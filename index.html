@@ -7,7 +7,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <title>وزارة الحج والعمرة - رسائل الشكر</title>
   <style>
-
+ 
 .selected-employee {
   border: 3px solid #006c4b !important;
   background: #e0f7e9 !important;
@@ -502,6 +502,208 @@
         margin-bottom: 1.5rem;
       }
     }
+
+    .message-form {
+  margin: 2rem 0;
+  position: relative;
+}
+
+.message-form h4 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-left: 40px;
+}
+
+.message-form h4::before {
+  content: "\f4ad";
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  color: #b49164;
+}
+
+.message-form textarea {
+  width: 100%;
+  padding: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 15px;
+  margin: 1rem 0;
+  min-height: 180px;
+  font-family: 'IBM Plex Arabic', Arial, sans-serif;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #ffffff, #f4f4f4);
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+}
+
+.message-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 15px rgba(0,108,75,0.2);
+  background: linear-gradient(145deg, #ffffff, #f8f8f8);
+}
+
+.suggestions {
+  background: rgba(224, 247, 233, 0.3);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin: 1.5rem 0;
+  border: 2px dashed var(--primary-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.suggestions::before {
+  content: "💡";
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 1.5rem;
+  opacity: 0.3;
+}
+
+.hashtags {
+  background: rgba(0,108,75,0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+}
+
+.hashtags input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid rgba(0,108,75,0.2);
+  border-radius: 8px;
+  font-family: 'IBM Plex Arabic';
+  text-align: center;
+  font-weight: 500;
+  color: var(--primary-color);
+  background: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hashtags input:hover {
+  border-color: var(--primary-color);
+  background: rgba(255,255,255,0.9);
+}
+
+.share-button {
+  background: linear-gradient(135deg, var(--primary-color), #004d33);
+  color: white !important;
+  padding: 1.2rem 2.5rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2rem auto 1rem;
+  box-shadow: 0 5px 20px rgba(0,108,75,0.3);
+}
+
+.share-button i {
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,108,75,0.4);
+}
+
+.share-button:hover i {
+  transform: scale(1.1);
+}
+
+/* أنماط نافذة المشاركة */
+.share-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 25px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: modalEnter 0.4s ease;
+}
+
+@keyframes modalEnter {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.platforms {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.platform {
+  padding: 1.2rem;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+.platform.twitter { background: #1DA1F2; }
+.platform.whatsapp { background: #25D366; }
+.platform.facebook { background: #1877F2; }
+
+.platform:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  color: var(--primary-color);
+  transform: rotate(90deg);
+}
   </style>
 </head>
 <body>
@@ -948,8 +1150,25 @@ function showMessageForm() {
     </div>
   `;
 
-  const shareButtons = createShareButtons();
-  formCard.appendChild(shareButtons);
+  // إضافة حقل الهاشتاق
+  const hashtagSection = document.createElement('div');
+  hashtagSection.className = 'hashtags';
+  hashtagSection.innerHTML = `
+    <p>${currentLang === 'ar' ? 'الهاشتاقات:' : 'Hashtags:'}</p>
+    <input type="text" id="hashtags" value="${currentLang === 'ar' ? '#وزارة_الحج #المسارات_الإلكترونية' : '#HajjMinistry #E_Services'}" readonly>
+  `;
+  formCard.appendChild(hashtagSection);
+
+  // إنشاء زر المشاركة
+  const shareButton = document.createElement('button');
+  shareButton.className = 'share-button';
+  shareButton.innerHTML = `
+    <i class="fas fa-share"></i>
+    ${currentLang === 'ar' ? 'مشاركة الرسالة' : 'Share Message'}
+  `;
+  shareButton.onclick = shareMessage;
+  
+  formCard.appendChild(shareButton);
   container.appendChild(formCard);
 }
 
@@ -981,6 +1200,65 @@ function createShareButtons() {
 
   return buttons;
 }
+function shareMessage() {
+  const customMessage = document.getElementById('customMessage').value;
+  const names = selectedEmployees.map(e => e.name[currentLang]).join('، ');
+  const hashtags = document.getElementById('hashtags').value;
+  
+  const fullText = `${customMessage}\n\n${names}\n${hashtags}`;
+
+  // إنشاء قائمة المنصات
+  const platforms = [
+    {
+      name: 'Twitter',
+      icon: 'fab fa-x-twitter',
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`
+    },
+    {
+      name: 'WhatsApp',
+      icon: 'fab fa-whatsapp',
+      url: `https://wa.me/?text=${encodeURIComponent(fullText)}`
+    },
+    {
+      name: 'Facebook',
+      icon: 'fab fa-facebook-f',
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(fullText)}`
+    }
+  ];
+
+  // فتح نافذة المشاركة
+  const shareWindow = window.open('', '_blank');
+  shareWindow.document.write(`
+    <html>
+      <head>
+        <title>${currentLang === 'ar' ? 'مشاركة الرسالة' : 'Share Message'}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          .platforms { display: flex; gap: 15px; margin-top: 20px; }
+          .platform { 
+            padding: 10px 20px;
+            border: 2px solid #006c4b;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+          }
+          .platform:hover { background: #e0f7e9; }
+        </style>
+      </head>
+      <body>
+        <h2>${currentLang === 'ar' ? 'اختر منصة للمشاركة:' : 'Choose sharing platform:'}</h2>
+        <div class="platforms">
+          ${platforms.map(p => `
+            <div class="platform" onclick="window.open('${p.url}', '_blank')">
+              <i class="${p.icon}"></i>
+              ${p.name}
+            </div>
+          `).join('')}
+        </div>
+      </body>
+    </html>
+  `);}
 
 document.getElementById('generateButton').addEventListener('click', showMessageForm);
   </script>
